@@ -34,4 +34,14 @@ public class EstudianteServiceImpl implements IEstudianteService{
 		
 	}
 
+	@Override
+	public Estudiante encontrarEstudiantePorNombre(String nombre) {
+		return this.estudianteRepository.buscarEstudiantePorNombre(nombre);
+	}
+
+	@Override
+	public Estudiante encontrarEstudiantePorApellido(String apellido) {
+		return this.estudianteRepository.buscarEstudiantePorApellido(apellido);
+	}
+
 }

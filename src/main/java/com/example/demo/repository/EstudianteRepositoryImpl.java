@@ -6,12 +6,13 @@ import com.example.demo.modelo.Estudiante;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Transactional
 @Repository
-public class EstudianteRepositoryImpl implements IEstudianteRepository{
-	
+public class EstudianteRepositoryImpl implements IEstudianteRepository {
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -34,6 +35,26 @@ public class EstudianteRepositoryImpl implements IEstudianteRepository{
 	public void eliminar(Integer id) {
 		Estudiante estu = this.buscar(id);
 		this.entityManager.remove(estu);
+	}
+
+	@Override
+	public Estudiante buscarEstudiantePorNombre(String nombre) {
+		TypedQuery<Estudiante> myQuery = this.entityManager
+				.createQuery("SELECT e FROM Estudiante e WHERE e.nombre=:nombre", Estudiante.class);
+		myQuery.setParameter("nombre", nombre);
+
+		return myQuery.getSingleResult();
+
+	}
+	
+	@Override
+	public Estudiante buscarEstudiantePorApellido(String apellido) {
+		TypedQuery<Estudiante> myQuery = this.entityManager
+				.createQuery("SELECT e FROM Estudiante e WHERE e.apellido=:apellido", Estudiante.class);
+		myQuery.setParameter("apellido", apellido);
+
+		return myQuery.getSingleResult();
+
 	}
 
 }

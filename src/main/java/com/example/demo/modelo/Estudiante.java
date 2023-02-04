@@ -32,7 +32,7 @@ public class Estudiante {
 
 	@Column(name = "estu_salario")
 	private BigDecimal salario;
-
+	
 	// metodos set y get
 	public Integer getId() {
 		return id;
@@ -74,4 +74,7 @@ public class Estudiante {
 		this.salario = salario;
 	}
 
+
+
+	
 }

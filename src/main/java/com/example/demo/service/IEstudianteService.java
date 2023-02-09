@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.example.demo.modelo.Estudiante;
 
 
@@ -16,5 +19,9 @@ public interface IEstudianteService {
 	public Estudiante encontrarEstudiantePorNombre(String nombre);
 
 	public Estudiante encontrarEstudiantePorApellido(String apellido);
+
+	List<Estudiante> encontrarTodos();
+	
+	List<Estudiante> encontrarTodosPorSalario(BigDecimal salario);
 
 }

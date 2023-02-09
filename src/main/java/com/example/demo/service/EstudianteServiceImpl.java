@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,11 @@ public class EstudianteServiceImpl implements IEstudianteService{
 		return this.estudianteRepository.buscar(id);
 	}
 
+	
+	@Override
+	public List<Estudiante> encontrarTodos() {
+		return this.estudianteRepository.buscarTodos();
+	} 
 	@Override
 	public void borrar(Integer id) {
 		this.estudianteRepository.eliminar(id);
@@ -42,6 +50,11 @@ public class EstudianteServiceImpl implements IEstudianteService{
 	@Override
 	public Estudiante encontrarEstudiantePorApellido(String apellido) {
 		return this.estudianteRepository.buscarEstudiantePorApellido(apellido);
+	}
+
+	@Override
+	public List<Estudiante> encontrarTodosPorSalario(BigDecimal salario) {
+		return this.estudianteRepository.buscarTodosPorSalario(salario);
 	}
 
 }

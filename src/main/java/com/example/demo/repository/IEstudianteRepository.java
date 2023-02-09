@@ -1,5 +1,8 @@
 package com.example.demo.repository;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.example.demo.modelo.Estudiante;
 
 
@@ -17,5 +20,9 @@ public interface IEstudianteRepository {
 	public Estudiante buscarEstudiantePorNombre(String nombre);
 
 	public Estudiante buscarEstudiantePorApellido(String apellido);
+
+	List<Estudiante> buscarTodos();
+
+	List<Estudiante> buscarTodosPorSalario(BigDecimal salario);
 
 }

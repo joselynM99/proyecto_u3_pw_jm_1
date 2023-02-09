@@ -1,5 +1,8 @@
 package com.example.demo.repository;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.modelo.Estudiante;
@@ -32,6 +35,21 @@ public class EstudianteRepositoryImpl implements IEstudianteRepository {
 	}
 
 	@Override
+	public List<Estudiante> buscarTodos() {
+		TypedQuery<Estudiante> myQuery = this.entityManager.createQuery("SELECT e FROM Estudiante e", Estudiante.class);
+		return myQuery.getResultList();
+
+	}
+	
+	@Override
+	public List<Estudiante> buscarTodosPorSalario(BigDecimal salario) {
+		TypedQuery<Estudiante> myQuery = this.entityManager.createQuery("SELECT e FROM Estudiante e WHERE e.salario>=:salario", Estudiante.class);
+		myQuery.setParameter("salario", salario);
+		return myQuery.getResultList();
+
+	}
+
+	@Override
 	public void eliminar(Integer id) {
 		Estudiante estu = this.buscar(id);
 		this.entityManager.remove(estu);
@@ -46,7 +64,7 @@ public class EstudianteRepositoryImpl implements IEstudianteRepository {
 		return myQuery.getSingleResult();
 
 	}
-	
+
 	@Override
 	public Estudiante buscarEstudiantePorApellido(String apellido) {
 		TypedQuery<Estudiante> myQuery = this.entityManager

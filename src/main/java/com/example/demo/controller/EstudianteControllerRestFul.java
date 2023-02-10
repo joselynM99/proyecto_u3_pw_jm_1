@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,13 +45,22 @@ public class EstudianteControllerRestFul {
 	}
 
 	@GetMapping(path = "/{id}")
-	public Estudiante encontrar(@PathVariable("id") Integer id) {
-		return this.estudianteService.encontrar(id);
+	public ResponseEntity<Estudiante> encontrar(@PathVariable("id") Integer id) {
+
+		Estudiante estu = this.estudianteService.encontrar(id);
+		return ResponseEntity.status(230).body(estu);
+
 	}
 
 	@GetMapping
-	public List<Estudiante> encontrarTodos() {
-		return this.estudianteService.encontrarTodos();
+	public ResponseEntity<List<Estudiante>> encontrarTodos() {
+		
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("detalleMensaje", "Estudiante encontrado correctamente");
+		cabeceras.add("valorCalculado", "100");
+		List<Estudiante> lista = this.estudianteService.encontrarTodos();
+		return new ResponseEntity<>(lista, cabeceras, 230);
+				
 	}
 
 	@GetMapping(path = "/salario")

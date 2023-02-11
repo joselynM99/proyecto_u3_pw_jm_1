@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +24,7 @@ import com.example.demo.service.IEstudianteService;
 
 @RestController
 @RequestMapping("/estudiantes")
+@CrossOrigin
 public class EstudianteControllerRestFul {
 
 	@Autowired
@@ -31,12 +35,22 @@ public class EstudianteControllerRestFul {
 		this.estudianteService.registrar(estudiante);
 	}
 
-	@PutMapping(path = "/{id}")
+	/*@PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_XML_VALUE})
 	public void actualizar(@PathVariable("id") Integer id, @RequestBody Estudiante estudiante,
 			@RequestParam("provincia") String provincia) {
 		estudiante.setId(id);
 		System.out.println(provincia);
 		this.estudianteService.actualizar(estudiante);
+	}*/
+	
+	@PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Estudiante> actualizar(@PathVariable("id") Integer id, @RequestBody Estudiante estudiante,
+			@RequestParam("provincia") String provincia) {
+		estudiante.setId(id);
+		System.out.println(provincia);
+		this.estudianteService.actualizar(estudiante);
+		Estudiante estu = this.estudianteService.encontrar(id);
+		return ResponseEntity.status(HttpStatus.OK).body(estu);
 	}
 
 	@PutMapping
@@ -44,7 +58,7 @@ public class EstudianteControllerRestFul {
 
 	}
 
-	@GetMapping(path = "/{id}")
+	@GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<Estudiante> encontrar(@PathVariable("id") Integer id) {
 
 		Estudiante estu = this.estudianteService.encontrar(id);

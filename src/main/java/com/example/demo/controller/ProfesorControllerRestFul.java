@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,24 +27,40 @@ public class ProfesorControllerRestFul {
 	@Autowired
 	private IProfesorService profesorService;
 
-	@PostMapping
+//	@PostMapping( consumes = { MediaType.APPLICATION_JSON_VALUE })
+//	public void registrar(@RequestBody Profesor profesor) {
+//		this.profesorService.registrar(profesor);
+//	}
+	@PostMapping( consumes = { MediaType.APPLICATION_XML_VALUE })
 	public void registrar(@RequestBody Profesor profesor) {
 		this.profesorService.registrar(profesor);
 	}
-
-	@PutMapping(path = "/{id}")
-	public void actualizar(@PathVariable("id") Integer id, @RequestBody Profesor profesor) {
-
+//	@PutMapping(path = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+//			MediaType.APPLICATION_JSON_VALUE })
+//	public ResponseEntity<Profesor> actualizar(@PathVariable("id") Integer id, @RequestBody Profesor profesor) {
+//		profesor.setId(id);
+//		this.profesorService.actualizar(profesor);
+//		return ResponseEntity.status(HttpStatus.OK).body(this.profesorService.encontrar(id));
+//	}
+	@PutMapping(path = "/{id}", consumes = { MediaType.APPLICATION_XML_VALUE }, produces = {
+			MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<Profesor> actualizar(@PathVariable("id") Integer id, @RequestBody Profesor profesor) {
 		profesor.setId(id);
 		this.profesorService.actualizar(profesor);
+		return ResponseEntity.status(HttpStatus.OK).body(this.profesorService.encontrar(id));
 	}
-
 	@PutMapping
 	public void actualizarTodos(Estudiante estudiante) {
 
 	}
 
-	@GetMapping(path = "/{id}")
+//	@GetMapping(path = "/{id}", produces = {
+//			MediaType.APPLICATION_JSON_VALUE })
+//	public Profesor encontrar(@PathVariable("id") Integer id) {
+//		return this.profesorService.encontrar(id);
+//	}
+	@GetMapping(path = "/{id}", produces = {
+			MediaType.APPLICATION_XML_VALUE })
 	public Profesor encontrar(@PathVariable("id") Integer id) {
 		return this.profesorService.encontrar(id);
 	}
@@ -59,6 +80,10 @@ public class ProfesorControllerRestFul {
 	@DeleteMapping
 	public void borrarTodos() {
 
+	}
+	@GetMapping
+	public List<Profesor> encontrarTodos() {
+		return this.profesorService.encontrarTodos();
 	}
 
 }

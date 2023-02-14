@@ -1,8 +1,9 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.modelo.Estudiante;
 import com.example.demo.modelo.Profesor;
 
 import jakarta.persistence.EntityManager;
@@ -45,6 +46,14 @@ public class ProfesorRepositoryImpl implements IProfesorRepository {
 		myQuery.setParameter("cedula", cedula);
 
 		return myQuery.getSingleResult();
+	}
+	
+	@Override
+	public List<Profesor> buscarTodos() {
+		TypedQuery<Profesor> myQuery = this.entityManager.createQuery("SELECT p FROM Profesor p ",
+				Profesor.class);
+
+		return myQuery.getResultList();
 	}
 
 }

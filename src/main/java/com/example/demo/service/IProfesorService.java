@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import com.example.demo.modelo.Profesor;
 
 
@@ -15,6 +17,8 @@ public interface IProfesorService {
 
 	
 	public Profesor encontrarPorCedula(String cedula);
+
+	List<Profesor> encontrarTodos();
 
 	
 

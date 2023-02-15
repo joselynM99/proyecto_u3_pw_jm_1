@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,11 @@ public class ProfesorServiceImpl implements IProfesorService{
 	@Override
 	public Profesor encontrarPorCedula(String cedula) {
 		return this.profesorRepository.buscarPorCedula(cedula);
+	}
+	
+	@Override
+	public List<Profesor> encontrarTodos() {
+		return this.profesorRepository.buscarTodos();
 	}
 
 }

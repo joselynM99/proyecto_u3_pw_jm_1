@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import com.example.demo.modelo.Profesor;
 
 
@@ -15,6 +17,8 @@ public interface IProfesorRepository {
 
 	
 	public Profesor buscarPorCedula(String cedula);
+
+	List<Profesor> buscarTodos();
 
 	
 

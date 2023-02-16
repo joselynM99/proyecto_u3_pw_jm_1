@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.example.demo.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
+import com.example.demo.service.to.EstudianteTO;
+import com.example.demo.service.to.MateriaTO;
 
 @RestController
 @RequestMapping("/estudiantes")
@@ -35,15 +40,18 @@ public class EstudianteControllerRestFul {
 		this.estudianteService.registrar(estudiante);
 	}
 
-	/*@PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_XML_VALUE})
-	public void actualizar(@PathVariable("id") Integer id, @RequestBody Estudiante estudiante,
-			@RequestParam("provincia") String provincia) {
-		estudiante.setId(id);
-		System.out.println(provincia);
-		this.estudianteService.actualizar(estudiante);
-	}*/
-	
-	@PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+	/*
+	 * @PutMapping(path = "/{id}", consumes = {MediaType.APPLICATION_XML_VALUE})
+	 * public void actualizar(@PathVariable("id") Integer id, @RequestBody
+	 * Estudiante estudiante,
+	 * 
+	 * @RequestParam("provincia") String provincia) { estudiante.setId(id);
+	 * System.out.println(provincia); this.estudianteService.actualizar(estudiante);
+	 * }
+	 */
+
+	@PutMapping(path = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+			MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Estudiante> actualizar(@PathVariable("id") Integer id, @RequestBody Estudiante estudiante,
 			@RequestParam("provincia") String provincia) {
 		estudiante.setId(id);
@@ -58,7 +66,7 @@ public class EstudianteControllerRestFul {
 
 	}
 
-	@GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_XML_VALUE})
+	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<Estudiante> encontrar(@PathVariable("id") Integer id) {
 
 		Estudiante estu = this.estudianteService.encontrar(id);
@@ -66,16 +74,35 @@ public class EstudianteControllerRestFul {
 
 	}
 
-	@GetMapping
-	public ResponseEntity<List<Estudiante>> encontrarTodos() {
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<EstudianteTO> encontrarTodosHateoas() {
+		List<EstudianteTO> lista = this.estudianteService.encontrarTodosTO();
+		for (EstudianteTO estu : lista) {
+			Link myLink = linkTo(methodOn(EstudianteControllerRestFul.class).buscarMaterias(estu.getId()))
+					.withRel("materias");
+			estu.add(myLink);
+		}
 		
-		HttpHeaders cabeceras = new HttpHeaders();
-		cabeceras.add("detalleMensaje", "Estudiante encontrado correctamente");
-		cabeceras.add("valorCalculado", "100");
-		List<Estudiante> lista = this.estudianteService.encontrarTodos();
-		return new ResponseEntity<>(lista, cabeceras, 230);
-				
+		return lista;
+
 	}
+
+	@GetMapping(path = "/{idEstudiante}/materias")
+	public List<MateriaTO> buscarMaterias(@PathVariable("idEstudiante") Integer idEstudiante) {
+		return null;
+
+	}
+
+//	@GetMapping
+//	public ResponseEntity<List<Estudiante>> encontrarTodos() {
+//		
+//		HttpHeaders cabeceras = new HttpHeaders();
+//		cabeceras.add("detalleMensaje", "Estudiante encontrado correctamente");
+//		cabeceras.add("valorCalculado", "100");
+//		List<Estudiante> lista = this.estudianteService.encontrarTodos();
+//		return new ResponseEntity<>(lista, cabeceras, 230);
+//				
+//	}
 
 	@GetMapping(path = "/salario")
 	public List<Estudiante> encontrarTodosPorSalario(@RequestParam("salario") BigDecimal salario) {

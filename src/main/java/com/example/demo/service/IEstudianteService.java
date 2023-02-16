@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.example.demo.modelo.Estudiante;
+import com.example.demo.service.to.EstudianteTO;
 
 
 public interface IEstudianteService {
@@ -24,4 +25,5 @@ public interface IEstudianteService {
 	
 	List<Estudiante> encontrarTodosPorSalario(BigDecimal salario);
 
+	List<EstudianteTO> encontrarTodosTO();
 }

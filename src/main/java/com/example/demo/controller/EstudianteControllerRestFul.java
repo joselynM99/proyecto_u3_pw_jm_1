@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.example.demo.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
+import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteNuevoTO;
 import com.example.demo.service.to.EstudianteTO;
 import com.example.demo.service.to.MateriaTO;
 
@@ -34,6 +37,9 @@ public class EstudianteControllerRestFul {
 
 	@Autowired
 	private IEstudianteService estudianteService;
+
+	@Autowired
+	private IMateriaService materiaService;
 
 	@PostMapping
 	public void registrar(@RequestBody Estudiante estudiante) {
@@ -50,26 +56,26 @@ public class EstudianteControllerRestFul {
 	 * }
 	 */
 
-	@PutMapping(path = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Estudiante> actualizar(@PathVariable("id") Integer id, @RequestBody Estudiante estudiante,
-			@RequestParam("provincia") String provincia) {
-		estudiante.setId(id);
-		System.out.println(provincia);
-		this.estudianteService.actualizar(estudiante);
-		Estudiante estu = this.estudianteService.encontrar(id);
-		return ResponseEntity.status(HttpStatus.OK).body(estu);
-	}
+//	@PutMapping(path = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+//			MediaType.APPLICATION_JSON_VALUE })
+//	public ResponseEntity<Estudiante> actualizar(@PathVariable("id") Integer id, @RequestBody Estudiante estudiante,
+//			@RequestParam("provincia") String provincia) {
+//		estudiante.setId(id);
+//		System.out.println(provincia);
+//		this.estudianteService.actualizar(estudiante);
+//		Estudiante estu = this.estudianteService.encontrar(id);
+//		return ResponseEntity.status(HttpStatus.OK).body(estu);
+//	}
 
 	@PutMapping
 	public void actualizarTodos(Estudiante estudiante) {
 
 	}
 
-	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<Estudiante> encontrar(@PathVariable("id") Integer id) {
+	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<EstudianteNuevoTO> encontrar(@PathVariable("id") Integer id) {
 
-		Estudiante estu = this.estudianteService.encontrar(id);
+		EstudianteNuevoTO estu = this.estudianteService.encontrar(id);
 		return ResponseEntity.status(230).body(estu);
 
 	}
@@ -81,15 +87,36 @@ public class EstudianteControllerRestFul {
 			Link myLink = linkTo(methodOn(EstudianteControllerRestFul.class).buscarMaterias(estu.getId()))
 					.withRel("materias");
 			estu.add(myLink);
+			// link a sí mismo
+			Link myLink2 = linkTo(methodOn(EstudianteControllerRestFul.class).encontrar(estu.getId())).withSelfRel();
+			estu.add(myLink2);
+
+			Link myLink3 = linkTo(EstudianteControllerRestFul.class).slash("prueba").slash("pruebaEstudiante")
+					.slash(estu.getId()).withRel("enlace prueba");
+			estu.add(myLink3);
 		}
-		
+
 		return lista;
 
 	}
 
-	@GetMapping(path = "/{idEstudiante}/materias")
+	@GetMapping(path = "/{idEstudiante}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<MateriaTO> buscarMaterias(@PathVariable("idEstudiante") Integer idEstudiante) {
-		return null;
+		
+		List<MateriaTO> lista = this.materiaService.buscarPorEstudiante(idEstudiante);
+		
+		for(MateriaTO mat :lista) {
+			Link myLink = linkTo(methodOn(EstudianteControllerRestFul.class).buscarMateria(mat.getId()))
+					.withSelfRel();
+			mat.add(myLink);
+		}
+		return lista;
+
+	}
+	
+	@GetMapping(path = "/materias/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public MateriaTO buscarMateria(@PathVariable("id") Integer id) {
+		return this.materiaService.encontrarMateria(id);
 
 	}
 

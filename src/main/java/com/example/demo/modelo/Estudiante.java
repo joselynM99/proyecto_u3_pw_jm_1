@@ -36,7 +36,7 @@ public class Estudiante {
 	@Column(name = "estu_salario")
 	private BigDecimal salario;
 	
-	@OneToMany(mappedBy = "estudiante", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "estudiante")
 	private List<Materia> materias;
 	
 	// metodos set y get

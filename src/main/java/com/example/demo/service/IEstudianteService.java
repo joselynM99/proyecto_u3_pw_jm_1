@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.example.demo.modelo.Estudiante;
+import com.example.demo.service.to.EstudianteNuevoTO;
 import com.example.demo.service.to.EstudianteTO;
 
 
@@ -13,7 +14,7 @@ public interface IEstudianteService {
 	
 	public void actualizar(Estudiante estudiante);
 	
-	public Estudiante encontrar(Integer id);
+	public EstudianteNuevoTO encontrar(Integer id);
 	
 	public void borrar(Integer id);
 	
